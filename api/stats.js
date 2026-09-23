@@ -13,20 +13,15 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing platform or username' });
   }
 
-  const apiKey = process.env.TRN_API_KEY;
-  if (!apiKey) {
-    return res.status(500).json({ error: 'TRN_API_KEY environment variable is missing on Vercel.' });
-  }
-
-  const trackerUrl = `https://public-api.tracker.gg/v2/rocket-league/standard/profile/${platform}/${encodeURIComponent(username)}`;
+  // Uses the public web profile endpoint (no TRN-Api-Key required)
+  const trackerUrl = `https://api.tracker.gg/api/v2/rocket-league/standard/profile/${platform}/${encodeURIComponent(username)}`;
 
   try {
     const apiRes = await fetch(trackerUrl, {
       method: 'GET',
       headers: {
-        'TRN-Api-Key': apiKey,
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'application/json'
+        'Accept': 'application/json, text/plain, */*'
       }
     });
 
